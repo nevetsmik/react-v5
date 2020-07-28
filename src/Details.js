@@ -1,6 +1,7 @@
 import React from "react";
 import pet from "@frontendmasters/pet";
 import Carousel from "./Carousel";
+import ErrorBoundary from "./ErrorBoundary";
 
 // const Details = (props) => {
 //   return (
@@ -13,21 +14,22 @@ import Carousel from "./Carousel";
 class Details extends React.Component {
   state = { loading: true };
 
-  async componentDidMount() {
-    try {
-      const { animal } = await pet.animal(+this.props.id);
-      this.setState({
-        name: animal.name,
-        animal: animal.type,
-        location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
-        description: animal.description,
-        media: animal.photos,
-        breed: animal.breeds.primary,
-        loading: false,
-      });
-    } catch (error) {
-      console.error("Details", error);
-    }
+  componentDidMount() {
+    // throw new Error("lol");
+    pet
+      .animal(+this.props.id)
+      .then(({ animal }) => {
+        this.setState({
+          name: animal.name,
+          animal: animal.type,
+          location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
+          description: animal.description,
+          media: animal.photos,
+          breed: animal.breeds.primary,
+          loading: false,
+        });
+      })
+      .catch((err) => this.setState({ error: err }));
   }
   render() {
     if (this.state.loading) {
@@ -48,4 +50,12 @@ class Details extends React.Component {
   }
 }
 
-export default Details;
+// ErrorBoundary sits on top of components. If there is no error, then pass all the props to all of Error Boundary's children
+export default function DetailsWithErrorBoundary(props) {
+  return (
+    <ErrorBoundary>
+      <Details {...props} />
+      {/* <Details id={props.id} prop={props.something} /> */}
+    </ErrorBoundary>
+  );
+}
