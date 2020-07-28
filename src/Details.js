@@ -10,13 +10,8 @@ import pet from "@frontendmasters/pet";
 // };
 
 class Details extends React.Component {
-  constructor(props) {
-    super(props);
+  state = { loading: true };
 
-    this.state = {
-      loading: true,
-    };
-  }
   async componentDidMount() {
     try {
       const { animal } = await pet.animal(this.props.id);
