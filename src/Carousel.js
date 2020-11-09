@@ -6,7 +6,7 @@ class Carousel extends React.Component {
     active: 0,
   };
 
-  // takes in a set of props from the parent, derive a new state and inject into state
+  // Takes in a set of props from the parent, derive a new state and inject into state
   static getDerivedStateFromProps({ media }) {
     let photos = ["http://placecorgi.com/600/600"];
 
